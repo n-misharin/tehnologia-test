@@ -1,0 +1,1 @@
+java -classpath .;.\lib\*   com.tehnologia.rp.op.multithread.OperationThreadListner -url jdbc:oracle:thin:@10.0.1.3:1521:baprod -node 0
