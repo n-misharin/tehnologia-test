@@ -1,4 +1,4 @@
---DROP TABLE agent_natural, agent, object, personal_doc_general, personal_doc_property, personal_doc, residence, residence_type;
+DROP TABLE agent_natural, agent, object, personal_doc_general, personal_doc_property, personal_doc, residence, residence_type;
 
 CREATE TABLE IF NOT EXISTS agent (
     id_agent SERIAL PRIMARY KEY,
@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS personal_doc (
     begin_date DATE,
     end_date DATE,
     id_personal_doc_class  INT,
+    note VARCHAR(100),
     FOREIGN KEY (id_agent) REFERENCES agent (id_agent)
 );
 
@@ -91,56 +92,59 @@ CREATE TABLE IF NOT EXISTS residence (
 INSERT INTO agent (agent_full_name)
 VALUES
     ('nikita1'), ('nikita2'), ('nikita3'), ('nikita4'), ('nikita5'),
-    ('nikita6'), ('nikita7'), ('nikita8'), ('nikita9'), ('nikita0');
+    ('nikita6'), ('nikita7'), ('nikita8'), ('nikita9'), ('nikita10');
 
-UPDATE agent SET death_date = '2023-05-01' WHERE agent.id_agent = 1;
-UPDATE agent SET death_date = '2023-06-01' WHERE agent.id_agent = 6;
-UPDATE agent SET death_date = '2023-07-01' WHERE agent.id_agent = 7;
-UPDATE agent SET death_date = '2023-07-01' WHERE agent.id_agent = 4;
 
 INSERT INTO residence_type (name)
 VALUES ('зарегистрирован'), ('жив, цел, орел');
 
-INSERT INTO personal_doc (id_agent, begin_date, end_date)
+INSERT INTO personal_doc (id_agent, begin_date, end_date, note)
 VALUES
-    (1, '2020-01-01', '2023-02-01'),
-    (2, '2023-02-01', NULL),
-    (1, '2023-03-01', NULL),
-    (3, '2023-01-01', '2023-02-01') ,
-    (4, '2023-02-01', NULL),
-    (5, '2023-02-01', '2023-03-01'),
-    (6, '2023-03-01', NULL),
-    (6, '2023-01-01', '2023-02-01'),
-    (7, '2023-02-01', '2023-03-01'),
-    (1, '2023-02-01', '2023-03-01'),
-    (5, '2023-03-01', NULL)
+    (1, '2000-01-01', '2023-02-01', 'паспорт'), -- 1
+    (2, '2000-01-02', '2023-02-01', 'паспорт'), -- 2
+    (3, '2000-01-03', '2023-02-01', 'паспорт'),
+    (4, '2000-01-04', '2023-02-01', 'паспорт'),
+    (5, '2000-01-05', '2023-02-01', 'паспорт'),
+    (6, '2000-01-06', '2023-02-01', 'паспорт'),
+    (7, '2000-01-07', '2023-02-01', 'паспорт'),
+    (8, '2000-01-08', '2023-02-01', 'паспорт'),
+    (9, '2000-01-09', '2023-02-01', 'паспорт'),
+    (10, '2000-01-10', '2023-02-01', 'паспорт'), -- 10
+    (1, '2023-01-01', NULL, 'купил хата1'),  --11
+    (2, '2023-01-01', '2023-02-01', 'купил хата2'), -- 12
+    (3, '2023-02-01', NULL, 'купил хата2'), -- 13
+    (4, '2023-03-01', '2023-04-01', 'купил хата3'), -- 14
+    (4, '2023-04-01', '2023-04-01', 'взял часть хата3'), -- 15
+    (5, '2023-04-01', NULL, 'взял часть хата3'), -- 16
+    (6, '2023-05-01', NULL, 'купил часть хата3'), -- 17
+    (1, '2023-01-01', '2023-02-01', 'хата4'), -- 18
+    (4, '2023-02-01', '2023-02-01', 'купил часть хата4'), -- 19
+    (3, '2023-02-01', '2023-02-01', 'купил часть хата4'), -- 20
+    (3, '2023-03-01', NULL, 'объединил хата4'), -- 21
 ;
+
+
 INSERT INTO object (object_name)
-VALUES ('хата1'), ('хата2'), ('хата3'), ('хата4');
+VALUES ('хата1'), ('хата2'), ('хата3'), ('хата4'), ('хата5'), ('хата6');
 
 INSERT INTO personal_doc_property (id_agent, id_object, id_personal_doc, property_part_dividend, property_part_divisor)
 VALUES
-    (1, 1, 1, 1, 1),
-    (2, 1, 2, 1, 1),
-    (1, 3, 3, 1, 1),
-    (3, 2, 4, 1, 1),
-    (4, 2, 5, 1, 2),
-    (5, 2, 6, 1, 2),
-    (6, 2, 7, 1, 2),
-    (6, 4, 8, 1, 1),
-    (7, 4, 9, 1, 2),
-    (1, 4, 10, 1, 2),
-    (5, 4, 11, 1, 1)
+-- агент, объект, документ, часть, часть
+    (1, 1, 11, 1, 1),
+    (2, 2, 12, 1, 1),
+    (3, 2, 13, 1, 1),
+    (4, 3, 14, 1, 1),
+    (5, 3, 16, 1, 2),
+    (4, 3, 15, 1, 2),
+    (6, 3, 17, 1, 2),
+    (1, 4, 18, 1, 1),
+    (3, 4, 19, 1, 2),
+    (4, 4, 20, 1, 2),
+    (3, 4, 21, 1, 1),
 ;
 
 -- Прописка
 INSERT INTO residence (id_object, id_residence_type, begin_date, id_agent, end_date)
 VALUES
-    (1, 1, '2023-01-01', 2, NULL),
-    (2, 1, '2023-01-01', 4, NULL),
-    (2, 1, '2023-01-01', 6, '2023-03-01'),
-    (3, 1, '2023-01-01', 1, NULL),
-    (4, 1, '2023-01-01', 5, NULL),
-    (3, 1, '2023-03-01', 7, NULL),
-    (3, 1, '2023-03-01', 3, NULL)
+    (1, 1, '2023-01-01', 2, NULL)
 ;
